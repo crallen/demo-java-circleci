@@ -8,6 +8,10 @@ jobs:
       - checkout
       - run: |
           gradle --build-cache assemble
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
   test:
     docker:
