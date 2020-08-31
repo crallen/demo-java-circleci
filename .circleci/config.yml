@@ -17,6 +17,8 @@ jobs:
     docker:
       - image: gradle:6.5.1-jdk11
     steps:
+      - attach_workspace:
+          at: .
       - run: |
           gradle check
 
