@@ -1,9 +1,13 @@
 version: 2
 
+environment: &environment
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+
 jobs:
   build:
     docker:
       - image: gradle:6.5.1-jdk11
+    environment: *environment
     steps:
       - checkout
       - run: |
@@ -16,6 +20,7 @@ jobs:
   test:
     docker:
       - image: gradle:6.5.1-jdk11
+    environment: *environment
     steps:
       - attach_workspace:
           at: .
