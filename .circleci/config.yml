@@ -42,5 +42,4 @@ workflows:
           repo: docker-java-circleci
           tag: "$(date -u +%Y%m%d%H%M%S)-sha_${CIRCLE_SHA1:0:7}"
           requires:
-            - build
             - test
