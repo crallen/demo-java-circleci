@@ -24,13 +24,15 @@ jobs:
       - image: gradle:6.5.1-jdk11
     environment: *environment
     steps:
-      - attach_workspace
+      - attach_workspace:
+          at: .
       - run: gradle check
 
   publish:
     machine: true
     steps:
-      - attach_workspace
+      - attach_workspace:
+          at: .
       - run: export IMAGE_TAG="$(date -u +%Y%m%d%H%M%S)-sha_${CIRCLE_SHA1:0:7}"
       - aws-ecr/build-and-push-image:
           repo: docker-java-circleci
