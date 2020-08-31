@@ -13,8 +13,7 @@ jobs:
     environment: *environment
     steps:
       - checkout
-      - run: |
-          gradle --build-cache assemble
+      - run: gradle --build-cache assemble
       - persist_to_workspace:
           root: .
           paths:
@@ -25,10 +24,16 @@ jobs:
       - image: gradle:6.5.1-jdk11
     environment: *environment
     steps:
-      - attach_workspace:
-          at: .
-      - run: |
-          gradle check
+      - attach_workspace
+      - run: gradle check
+
+  publish:
+    steps:
+      - attach_workspace
+      - run: export IMAGE_TAG="$(date -u +%Y%m%d%H%M%S)-sha_${CIRCLE_SHA1:0:7}"
+      - aws-ecr/build-and-push:
+          repo: docker-java-circleci
+          tag: ${IMAGE_TAG}
 
 workflows:
   build-test-publish:
@@ -37,9 +42,6 @@ workflows:
       - test:
           requires:
             - build
-      - aws-ecr/build-and-push-image:
-          attach-workspace: true
-          repo: docker-java-circleci
-          tag: "$(date -u +%Y%m%d%H%M%S)-sha_${CIRCLE_SHA1:0:7}"
+      - publish:
           requires:
             - test
